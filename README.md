@@ -1,9 +1,7 @@
 # MLM system in blockchain
 
-### solidity ^0.8.0
+### solidity ^0.8.12
 ### Hardhat
-### Proxy
-### Metamask
 
 ---
 * The user may log in by 2 ways:
