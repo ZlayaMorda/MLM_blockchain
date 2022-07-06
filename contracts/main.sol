@@ -5,35 +5,25 @@ pragma solidity ^0.8.12;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract Main is Initializable{
-    mapping (address => address) inviter;
-    mapping (address => address[]) directPartners;
-    mapping (address => uint) investment;
+    mapping (address => address) private inviter;
+    mapping (address => address[]) private directPartners;
 
     /**
     @dev get user's inviter address
-    @param adr user's address
+    @param _adr user's address
     @return inviter address
     */
-    function getInviter(address adr) external view returns(address){
-        return inviter[adr];
+    function getInviter(address _adr) external view returns(address){
+        return inviter[_adr];
     }
 
     /**
     @dev get array of direct partners
-    @param user's address
+    @param _adr user's address
     @return array of direct partners
     */
-    function getDirectPartners(address adr) external view returns(address[] memory){
-        return directPartners[adr];
-    }
-
-    /**
-    @dev get user's investment sum
-    @param user's address
-    @return investment sum
-    */
-    function getInvestment(address adr) external view returns(uint){
-        return investment[adr];
+    function getDirectPartners(address _adr) external view returns(address[] memory){
+        return directPartners[_adr];
     }
 
     /**
@@ -44,22 +34,10 @@ contract Main is Initializable{
         inviter[msg.sender] = _inviterAddress;
         directPartners[_inviterAddress].push(msg.sender);
     }
+}
 
-    /**
-    @dev invest more then 20 weis, contract get 5%
-    */
-    function investSum() external payable {
-        if (msg.value < 20){
-            revert("Too much little sum");
-        }
-        investment[msg.sender] += 95 * msg.value / 100;
-    }
+interface MainInterface{
+    function getInviter(address adr) external view returns(address);
 
-    function getContractSum() external view returns(uint){
-        return address(this).balance;
-    }
-
-    function getUserSum() external view returns(uint){
-        return investment[msg.sender];
-    }
+    function getDirectPartners(address adr) external view returns(address[] memory);
 }
