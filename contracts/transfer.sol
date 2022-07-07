@@ -4,8 +4,18 @@ pragma solidity ^0.8.12;
 
 import "./main.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/ownership/Ownable.sol";
 
-contract Transfer is Initializable{
+/**
+Store user's investment sum
+Store array of commission percents
+Store array of levels per investment sum
+Store address of main contract to use its fields
+
+Provides all operations with money in MLM, getting
+level and partners
+*/
+contract Transfer is Initializable, Ownable{
     mapping (address => uint) private investment;
 
     uint[] private levelsPerSum;
@@ -16,7 +26,7 @@ contract Transfer is Initializable{
     @dev initialize the contarct (main address, array of lvls, array of commission percent) 
     @param adr the address of the main contract
     */
-    function initialize(address adr) external initializer{
+    function initialize(address adr) external onlyOwner initializer{
         mainAddress = adr;
 
         levelsPerSum = [
@@ -62,6 +72,7 @@ contract Transfer is Initializable{
 
     /**
     @dev determine current user's lvl
+    @return lvl of sender
     */
     function getOwnLevel() external view returns(uint){
         return getLevel(msg.sender);
@@ -124,10 +135,18 @@ contract Transfer is Initializable{
     }
 
 
-    function getContractSum() external view returns(uint){
+    /**
+    @dev get contract balance
+    @return contract balance
+    */
+    function getContractSum() external view onlyOwner returns(uint){
         return address(this).balance;
     }
 
+    /**
+    @dev get user's investment balance in the MLM
+    @return user's investment balance
+    */
     function getUserSum() external view returns(uint){
         return investment[msg.sender];
     }
