@@ -2,8 +2,7 @@
 
 pragma solidity ^0.8.12;
 
-import "./main.sol";
-import "./interfaces/main_interface.sol";
+import "./interfaces/IMain.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
@@ -47,10 +46,6 @@ contract Transfer is Initializable, OwnableUpgradeable {
         commissionPercent = [10, 7, 5, 2, 1, 1, 1, 1, 1, 1];
     }
 
-    function getMainAddress() external view returns(address) {
-        return mainAddress;
-    }
-
     /**
     @dev invest more then 20 weis, contract get 5%
     */
@@ -63,17 +58,19 @@ contract Transfer is Initializable, OwnableUpgradeable {
     }
 
     /**
-    @dev determine user's lvl
-    @param _addressUser address of needable user
-    @return user's lvl
+    @dev get contract balance
+    @return contract balance
     */
-    function _getLevel(address _addressUser) private view returns (uint) {
-        for(uint i = 0; i < levelsPerSum.length; i++){
-            if(investment[_addressUser] < levelsPerSum[i]){
-                return i;
-            }
-        }  
-        return 10;      
+    function getContractSum() external view onlyOwner returns (uint) {
+        return address(this).balance;
+    }
+
+    /**
+    @dev get user's investment balance in the MLM
+    @return user's investment balance
+    */
+    function getUserSum() external view returns (uint) {
+        return investment[msg.sender];
     }
 
     /**
@@ -99,11 +96,11 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @return num of partners
     */
     function getPartners() external view returns (uint[] memory, uint) {
-        uint numOfPartners = MainInterface(mainAddress).getDirectPartners(msg.sender).length;
+        uint numOfPartners = IMain(mainAddress).getDirectPartners(msg.sender).length;
         if(numOfPartners != 0) {
             uint[] memory levels = new uint[](numOfPartners);
             for(uint i = 0; i < numOfPartners - 1; i++){
-                levels[i] =  _getLevel(MainInterface(mainAddress).getDirectPartners(msg.sender)[i]);    
+                levels[i] =  _getLevel(IMain(mainAddress).getDirectPartners(msg.sender)[i]);    
             }
             return (levels, numOfPartners);
         }
@@ -124,18 +121,32 @@ contract Transfer is Initializable, OwnableUpgradeable {
     }
 
     /**
+    @dev determine user's lvl
+    @param _addressUser address of needable user
+    @return user's lvl
+    */
+    function _getLevel(address _addressUser) private view returns (uint) {
+        for(uint i = 0; i < levelsPerSum.length; i++){
+            if(investment[_addressUser] < levelsPerSum[i]){
+                return i;
+            }
+        }  
+        return 10;      
+    }
+
+    /**
     @dev pay commision for all inviters
     @param _sum sum to withdraw
     */
     function _payForPartners(uint _sum) private {
         uint i = 1;
-        address parent = MainInterface(mainAddress).getInviter(msg.sender);
+        address parent = IMain(mainAddress).getInviter(msg.sender);
         while(i < 11 && parent != address(0)) {
             uint lvl = _getLevel(parent);
             if(lvl > i){
                 investment[parent] += _sum * commissionPercent[lvl - 1] / 1000;
             }
-            parent = MainInterface(mainAddress).getInviter(parent);
+            parent = IMain(mainAddress).getInviter(parent);
         }
     }
 
@@ -148,22 +159,5 @@ contract Transfer is Initializable, OwnableUpgradeable {
         (bool sent, /*memory data*/) = _adr.call{value: _sum}("");
         require(sent,"Transfer:: Fail, ether has not sent");
         investment[_adr] -= _sum;
-    }
-
-
-    /**
-    @dev get contract balance
-    @return contract balance
-    */
-    function getContractSum() external view onlyOwner returns (uint) {
-        return address(this).balance;
-    }
-
-    /**
-    @dev get user's investment balance in the MLM
-    @return user's investment balance
-    */
-    function getUserSum() external view returns (uint) {
-        return investment[msg.sender];
     }
 }

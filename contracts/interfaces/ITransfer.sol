@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.12;
 
-interface TransferInterface{
-    function getMainAddress() external view returns(address);
-
+interface ITransfer{
     function getLevel(address _adrUser) external view returns (uint);
 }
