@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MITadoc
 
 pragma solidity ^0.8.12;
 
@@ -7,7 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 /**
 Store inviter address for an user
 Store array of direct partners addresses for an user
-Get their addressese 
+Get their addresses 
 */
 contract Main is Initializable{
     mapping (address => address) private inviter;
@@ -15,20 +15,20 @@ contract Main is Initializable{
 
     /**
     @dev get user's inviter address
-    @param _adr user's address
+    @param _address user's address
     @return inviter address
     */
-    function getInviter(address _adr) external view returns(address){
-        return inviter[_adr];
+    function getInviter(address _address) external view returns (address) {
+        return inviter[_address];
     }
 
     /**
     @dev get array of direct partners
-    @param _adr user's address
+    @param _address user's address
     @return array of direct partners
     */
-    function getDirectPartners(address _adr) external view returns(address[] memory){
-        return directPartners[_adr];
+    function getDirectPartners(address _address) external view returns (address[] memory) {
+        return directPartners[_address];
     }
 
     /**
@@ -39,10 +39,4 @@ contract Main is Initializable{
         inviter[msg.sender] = _inviterAddress;
         directPartners[_inviterAddress].push(msg.sender);
     }
-}
-
-interface MainInterface{
-    function getInviter(address adr) external view returns(address);
-
-    function getDirectPartners(address adr) external view returns(address[] memory);
 }

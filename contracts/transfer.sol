@@ -3,8 +3,9 @@
 pragma solidity ^0.8.12;
 
 import "./main.sol";
+import "./interfaces/main_interface.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 /**
 Store user's investment sum
@@ -15,7 +16,7 @@ Store address of main contract to use its fields
 Provides all operations with money in MLM, getting
 level and partners
 */
-contract Transfer is Initializable, Ownable{
+contract Transfer is Initializable, OwnableUpgradeable {
     mapping (address => uint) private investment;
 
     uint[] private levelsPerSum;
@@ -23,47 +24,52 @@ contract Transfer is Initializable, Ownable{
     address private mainAddress;
 
     /**
-    @dev initialize the contarct (main address, array of lvls, array of commission percent) 
-    @param adr the address of the main contract
+    @dev initialize the contract (main address, array of lvls, array of commission percent) 
+    @param _mainAddress the address of the main contract
     */
-    function initialize(address adr) external onlyOwner initializer{
-        mainAddress = adr;
+    function initialize(address _mainAddress) external initializer {
+        mainAddress = _mainAddress;
 
         levelsPerSum = [
-            5e15,
-            1e16,
-            2e16,
-            5e16,
-            1e17,
-            2e17,
-            5e17,
-            1e18,
-            2e18,
-            5e18
+            0.005 ether,
+            0.01 ether,
+            0.02 ether,
+            0.05 ether,
+            0.1 ether,
+            0.2 ether,
+            0.5 ether,
+            1 ether,
+            2 ether,
+            5 ether
         ];
 
         // need to divide by 1000 to get percent
         commissionPercent = [10, 7, 5, 2, 1, 1, 1, 1, 1, 1];
     }
 
+    function getMainAddress() external view returns(address) {
+        return mainAddress;
+    }
+
     /**
     @dev invest more then 20 weis, contract get 5%
     */
     function investSum() external payable {
-        if (msg.value < 20){
-            revert("Too much little sum");
-        }
+        require(
+            msg.value > 20,
+            "Transfer:: Too much little sum"
+        );
         investment[msg.sender] += 95 * msg.value / 100;
     }
 
     /**
     @dev determine user's lvl
-    @param _adrUser address of needable user
+    @param _addressUser address of needable user
     @return user's lvl
     */
-    function getLevel(address _adrUser) private view returns(uint){
+    function _getLevel(address _addressUser) private view returns (uint) {
         for(uint i = 0; i < levelsPerSum.length; i++){
-            if(investment[_adrUser] < levelsPerSum[i]){
+            if(investment[_addressUser] < levelsPerSum[i]){
                 return i;
             }
         }  
@@ -71,11 +77,20 @@ contract Transfer is Initializable, Ownable{
     }
 
     /**
+    @dev determine user's lvl
+    @param _addressUser address of needable user
+    @return user's lvl
+    */
+    function getLevel(address _addressUser) external view returns (uint) {
+        return _getLevel(_addressUser);
+    }
+
+    /**
     @dev determine current user's lvl
     @return lvl of sender
     */
-    function getOwnLevel() external view returns(uint){
-        return getLevel(msg.sender);
+    function getOwnLevel() external view returns (uint) {
+        return _getLevel(msg.sender);
     }
 
     /**
@@ -83,12 +98,12 @@ contract Transfer is Initializable, Ownable{
     @return array of lvls
     @return num of partners
     */
-    function getPartners() external view returns(uint[] memory, uint){
+    function getPartners() external view returns (uint[] memory, uint) {
         uint numOfPartners = MainInterface(mainAddress).getDirectPartners(msg.sender).length;
-        if(numOfPartners != 0){
+        if(numOfPartners != 0) {
             uint[] memory levels = new uint[](numOfPartners);
             for(uint i = 0; i < numOfPartners - 1; i++){
-                levels[i] =  getLevel(MainInterface(mainAddress).getDirectPartners(msg.sender)[i]);    
+                levels[i] =  _getLevel(MainInterface(mainAddress).getDirectPartners(msg.sender)[i]);    
             }
             return (levels, numOfPartners);
         }
@@ -99,23 +114,24 @@ contract Transfer is Initializable, Ownable{
     @dev withdraw user money, call functions to pay commisions and to pay user
     @param _sum sum to withdraw
     */
-    function withdrawMoney(uint _sum) external{
-        if(_sum > investment[msg.sender]){
-            revert("The sum is over then investment");
-        }
-        payFromContract(_sum, msg.sender);
-        payForParents(_sum);
+    function withdrawMoney(uint _sum) external {
+        require(
+            _sum < investment[msg.sender],
+            "Transfer:: The sum is over then investment"
+        );
+        _payFromContract(_sum, msg.sender);
+        _payForPartners(_sum);
     }
 
     /**
     @dev pay commision for all inviters
     @param _sum sum to withdraw
     */
-    function payForParents(uint _sum) private{
+    function _payForPartners(uint _sum) private {
         uint i = 1;
         address parent = MainInterface(mainAddress).getInviter(msg.sender);
-        while(i < 11 && parent != address(0)){
-            uint lvl = getLevel(parent);
+        while(i < 11 && parent != address(0)) {
+            uint lvl = _getLevel(parent);
             if(lvl > i){
                 investment[parent] += _sum * commissionPercent[lvl - 1] / 1000;
             }
@@ -128,9 +144,9 @@ contract Transfer is Initializable, Ownable{
     @param _sum sum to withdraw
     @param _adr user's address
     */
-    function payFromContract(uint _sum, address _adr) private{
+    function _payFromContract(uint _sum, address _adr) private {
         (bool sent, /*memory data*/) = _adr.call{value: _sum}("");
-        require(sent,"Fail, ether has not sent");
+        require(sent,"Transfer:: Fail, ether has not sent");
         investment[_adr] -= _sum;
     }
 
@@ -139,7 +155,7 @@ contract Transfer is Initializable, Ownable{
     @dev get contract balance
     @return contract balance
     */
-    function getContractSum() external view onlyOwner returns(uint){
+    function getContractSum() external view onlyOwner returns (uint) {
         return address(this).balance;
     }
 
@@ -147,7 +163,7 @@ contract Transfer is Initializable, Ownable{
     @dev get user's investment balance in the MLM
     @return user's investment balance
     */
-    function getUserSum() external view returns(uint){
+    function getUserSum() external view returns (uint) {
         return investment[msg.sender];
     }
 }
