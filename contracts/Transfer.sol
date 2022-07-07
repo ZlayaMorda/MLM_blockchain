@@ -22,6 +22,11 @@ contract Transfer is Initializable, OwnableUpgradeable {
     uint[] private  commissionPercent;
     address private mainAddress;
 
+    struct partner {
+        address partnerAddress;
+        uint pertnerLevel;
+    }
+
     /**
     @dev initialize the contract (main address, array of lvls, array of commission percent) 
     @param _mainAddress the address of the main contract
@@ -74,15 +79,6 @@ contract Transfer is Initializable, OwnableUpgradeable {
     }
 
     /**
-    @dev determine user's lvl
-    @param _addressUser address of needable user
-    @return user's lvl
-    */
-    function getLevel(address _addressUser) external view returns (uint) {
-        return _getLevel(_addressUser);
-    }
-
-    /**
     @dev determine current user's lvl
     @return lvl of sender
     */
@@ -92,19 +88,15 @@ contract Transfer is Initializable, OwnableUpgradeable {
 
     /**
     @dev determine num  of direct partners and their lvls
-    @return array of lvls
-    @return num of partners
+    @return array of partner(address, level)
     */
-    function getPartners() external view returns (uint[] memory, uint) {
-        uint numOfPartners = IMain(mainAddress).getDirectPartners(msg.sender).length;
-        if(numOfPartners != 0) {
-            uint[] memory levels = new uint[](numOfPartners);
-            for(uint i = 0; i < numOfPartners - 1; i++){
-                levels[i] =  _getLevel(IMain(mainAddress).getDirectPartners(msg.sender)[i]);    
-            }
-            return (levels, numOfPartners);
+    function getPartners() external view returns(partner[] memory){
+        address[] memory partners = IMain(mainAddress).getDirectPartners(msg.sender);
+        partner[] memory partnerLevels = new partner[](partners.length);
+        for(uint i = 0; i < partners.length - 1; i++){
+            partnerLevels[i] = partner(partners[i], _getLevel(partners[i]));    
         }
-        return (new uint [](0), numOfPartners);
+        return (partnerLevels);
     }
 
     /**
