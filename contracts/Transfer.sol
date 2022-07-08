@@ -16,15 +16,15 @@ Provides all operations with money in MLM, getting
 level and partners
 */
 contract Transfer is Initializable, OwnableUpgradeable {
-    mapping (address => uint) private investment;
+    mapping (address => uint256) private investment;
 
-    uint[] private levelsPerSum;
-    uint[] private  commissionPercent;
+    uint256[] private levelsPerSum;
+    uint256[] private  commissionPercent;
     address private mainAddress;
 
     struct partner {
         address partnerAddress;
-        uint pertnerLevel;
+        uint256 pertnerLevel;
     }
 
     /**
@@ -66,7 +66,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @dev get contract balance
     @return contract balance
     */
-    function getContractSum() external view onlyOwner returns (uint) {
+    function getContractSum() external view onlyOwner returns (uint256) {
         return address(this).balance;
     }
 
@@ -74,7 +74,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @dev get user's investment balance in the MLM
     @return user's investment balance
     */
-    function getUserSum() external view returns (uint) {
+    function getUserSum() external view returns (uint256) {
         return investment[msg.sender];
     }
 
@@ -82,7 +82,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @dev determine current user's lvl
     @return lvl of sender
     */
-    function getOwnLevel() external view returns (uint) {
+    function getOwnLevel() external view returns (uint256) {
         return _getLevel(msg.sender);
     }
 
@@ -93,7 +93,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     function getPartners() external view returns(partner[] memory){
         address[] memory partners = IMain(mainAddress).getDirectPartners(msg.sender);
         partner[] memory partnerLevels = new partner[](partners.length);
-        for(uint i = 0; i < partners.length - 1; i++){
+        for(uint256 i = 0; i < partners.length - 1; i++){
             partnerLevels[i] = partner(partners[i], _getLevel(partners[i]));    
         }
         return (partnerLevels);
@@ -103,7 +103,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @dev withdraw user money, call functions to pay commisions and to pay user
     @param _sum sum to withdraw
     */
-    function withdrawMoney(uint _sum) external {
+    function withdrawMoney(uint256 _sum) external {
         require(
             _sum < investment[msg.sender],
             "Transfer:: The sum is over then investment"
@@ -117,8 +117,8 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @param _addressUser address of needable user
     @return user's lvl
     */
-    function _getLevel(address _addressUser) private view returns (uint) {
-        for(uint i = 0; i < levelsPerSum.length; i++){
+    function _getLevel(address _addressUser) private view returns (uint256) {
+        for(uint256 i = 0; i < levelsPerSum.length; i++){
             if(investment[_addressUser] < levelsPerSum[i]){
                 return i;
             }
@@ -130,11 +130,11 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @dev pay commision for all inviters
     @param _sum sum to withdraw
     */
-    function _payForPartners(uint _sum) private {
-        uint i = 1;
+    function _payForPartners(uint256 _sum) private {
+        uint256 i = 1;
         address parent = IMain(mainAddress).getInviter(msg.sender);
         while(i < 11 && parent != address(0)) {
-            uint lvl = _getLevel(parent);
+            uint256 lvl = _getLevel(parent);
             if(lvl > i){
                 investment[parent] += _sum * commissionPercent[lvl - 1] / 1000;
             }
@@ -147,7 +147,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @param _sum sum to withdraw
     @param _adr user's address
     */
-    function _payFromContract(uint _sum, address _adr) private {
+    function _payFromContract(uint256 _sum, address _adr) private {
         (bool sent, /*memory data*/) = _adr.call{value: _sum}("");
         require(sent,"Transfer:: Fail, ether has not sent");
         investment[_adr] -= _sum;
