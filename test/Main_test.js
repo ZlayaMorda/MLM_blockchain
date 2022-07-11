@@ -21,28 +21,28 @@ describe("Main", function() {
     describe("Empty addresses", function() {
 
         it("should return empty inviter address", async function() {
-            expect(await main.getInviter(partner.address)).to.hexEqual("0x0")
+            await expect(await main.getInviter(partner.address)).to.hexEqual("0x0")
         })
 
         it("should return empty partner address", async function() {
             const partners_mas = await main.getDirectPartners(inviter.address)
-            expect(await partners_mas.length).equal(0)
+            await expect(await partners_mas.length).equal(0)
         })
     })
 
     describe("Get valid address", function() {
 
-        beforeEach(async function() {
+        before(async function() {
             await main.connect(partner).referralInvite(inviter.address)
         })
 
         it("should return correct inviter address", async function() {
-            expect(await main.getInviter(partner.address)).to.equal(inviter.address)
+            await expect(await main.getInviter(partner.address)).to.equal(inviter.address)
         })
 
         it("should return correct partner address", async function() {
             const partners_mas = await main.getDirectPartners(inviter.address)
-            expect(await partners_mas[0]).to.equal(partner.address)
+            await expect(await partners_mas[0]).to.equal(partner.address)
         })
     })
 })
