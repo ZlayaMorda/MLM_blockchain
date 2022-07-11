@@ -51,6 +51,10 @@ contract Transfer is Initializable, OwnableUpgradeable {
         commissionPercent = [10, 7, 5, 2, 1, 1, 1, 1, 1, 1];
     }
 
+    function getAddress() external view returns(address){
+        return mainAddress;
+    }
+
     /**
     @dev invest more then 20 weis, contract get 5%
     */
