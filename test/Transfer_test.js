@@ -1,37 +1,37 @@
 const { expect } = require("chai")
 const { ethers, upgrades } = require("hardhat")
+const {deployMockContract} = require("ethereum-waffle")
 
 describe("Transfer", function() {
-    let owner;
-    let main;
-    let transfer;
+    let owner
+    let main
+    let transfer
+    let mainMock
 
     beforeEach(async function() {
         [owner] = await ethers.getSigners()
-        const Main = await ethers.getContractFactory("Main", owner)
-        main = await Main.deploy()
-        await main.deployed()
-        console.log("main deployed to ", main.address)
+        const main = require("../artifacts/contracts/interfaces/IMain.sol/IMain.json")
+        mainMock = await deployMockContract(owner, main.abi)
+
         const Transfer = await ethers.getContractFactory("Transfer", owner)
-        transfer = await upgrades.deployProxy(Transfer, [main.address], {
+        transfer = await upgrades.deployProxy(Transfer, [mainMock.address], {
             initializer: "initialize",
         })
         await transfer.deployed()
-        console.log("owner", transfer.owner())
         console.log("transfer deployed to ", transfer.address)
     })
 
     it("Correct deploy addresses", async function() {
-        expect(main.address).to.be.properAddress
+        expect(mainMock.address).to.be.properAddress
         expect(transfer.address).to.be.properAddress
-        expect(await transfer.getAddress()).to.equal(main.address)
+        expect(await transfer.getAddress()).to.equal(mainMock.address)
     })
 
     it("Correct upgrade transfer", async function() {
         const TransferV2 = await ethers.getContractFactory("Transfer")
         await upgrades.upgradeProxy(transfer.address, TransferV2)
         expect(transfer.address).to.be.properAddress
-        expect(await transfer.getAddress()).to.equal(main.address)
+        expect(await transfer.getAddress()).to.equal(mainMock.address)
     })
 
     it("Correct get contract sum", async function() {

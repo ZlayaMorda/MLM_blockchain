@@ -33,6 +33,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     */
     function initialize(address _mainAddress) external initializer {
         mainAddress = _mainAddress;
+        __Ownable_init();
 
         levelsPerSum = [
             0.005 ether,
