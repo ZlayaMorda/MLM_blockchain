@@ -1,8 +1,8 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-    "txHash": "0x0a933702fa53648184b481a9b47e071b8c7d53d356b287edb55ad0cdf74ace45"
+    "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+    "txHash": "0x6a43b6c83e9285f6e4e748eac629824ffeed68f51fa80c9fa9db7d7ce5cb52f3"
   },
   "proxies": [
     {
@@ -11,20 +11,30 @@
       "kind": "transparent"
     },
     {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x236a3ac9c2a376a249c2b91e5ae7c48c6b5984572ab2aefa713ab63b17ec8a7a",
+      "kind": "transparent"
+    },
+    {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0xff2c8dd805a44e87feb4015aa6243205d0ccdf7b3fa776286a4b0f91245b53d6",
+      "txHash": "0xfdd93bc7ee0baf6c7e01c019a3aebdafb7c6348d1c5909add8653706b7bcef68",
       "kind": "transparent"
     },
     {
       "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
-      "txHash": "0x724d4c41f84ae41f6c89a8a38742ddb499b37e3638e9317e3a0eb6ba2b369e9e",
+      "txHash": "0xeb2dc92addea28de48d3185bac9407b086c9b5fad07e67fcaee56763c93138b0",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "txHash": "0xfbd548d38066e63e23fc6ded75718f0183edff551957273dad1d0e9ac24fcaf2",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "7b2f01cfe1986ca61d99eb6af1274dded8d7cbcad642ef6a07ea8bc20e3886ae": {
-      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "txHash": "0xdd986f639a277fa746adbedfef54b393937c1be84874555785a7fd6ea3c5e34a",
+    "38ef73c9336f2a5b127746af72164a4d2a91da671960cda986fe5fdace4a343b": {
+      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      "txHash": "0xa28ec4be9b9e51fbf972737542fc38d83582cd9b123d3107b9ba6a2d25510661",
       "layout": {
         "storage": [
           {
@@ -74,7 +84,7 @@
             "slot": "101",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:19"
+            "src": "contracts/Transfer.sol:23"
           },
           {
             "label": "levelsPerSum",
@@ -82,7 +92,7 @@
             "slot": "102",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:21"
+            "src": "contracts/Transfer.sol:25"
           },
           {
             "label": "commissionPercent",
@@ -90,7 +100,7 @@
             "slot": "103",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:22"
+            "src": "contracts/Transfer.sol:26"
           },
           {
             "label": "mainAddress",
@@ -98,7 +108,7 @@
             "slot": "104",
             "type": "t_address",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:23"
+            "src": "contracts/Transfer.sol:27"
           }
         ],
         "types": {

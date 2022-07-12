@@ -15,7 +15,7 @@ Store address of main contract to use its fields
 Provides all operations with money in MLM, getting
 level and partners
 */
-contract Transfer is Initializable, OwnableUpgradeable {
+contract Transfer is OwnableUpgradeable {
     mapping (address => uint256) private investment;
 
     uint256[] private levelsPerSum;
@@ -24,7 +24,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
 
     struct partner {
         address partnerAddress;
-        uint256 pertnerLevel;
+        uint256 partnerLevel;
     }
 
     /**
@@ -98,7 +98,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     function getPartners() external view returns(partner[] memory){
         address[] memory partners = IMain(mainAddress).getDirectPartners(msg.sender);
         partner[] memory partnerLevels = new partner[](partners.length);
-        for(uint256 i = 0; i < partners.length - 1; i++){
+        for(uint256 i = 0; i < partners.length; i++){
             partnerLevels[i] = partner(partners[i], _getLevel(partners[i]));    
         }
         return (partnerLevels);
@@ -110,7 +110,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     */
     function withdrawMoney(uint256 _sum) external {
         require(
-            _sum < investment[msg.sender],
+            _sum <= investment[msg.sender],
             "Transfer:: The sum is over then investment"
         );
         _payFromContract(_sum, msg.sender);
