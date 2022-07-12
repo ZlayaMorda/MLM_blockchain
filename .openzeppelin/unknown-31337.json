@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-    "txHash": "0x6a43b6c83e9285f6e4e748eac629824ffeed68f51fa80c9fa9db7d7ce5cb52f3"
+    "txHash": "0xf3791eadab824f08452f2c7dc847522a634cbfa800f079eef6ffddbf3aee09a4"
   },
   "proxies": [
     {
@@ -27,14 +27,14 @@
     },
     {
       "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "txHash": "0xfbd548d38066e63e23fc6ded75718f0183edff551957273dad1d0e9ac24fcaf2",
+      "txHash": "0x31d1f2b3a7b134aef209b0d2e2c12395e83866055eb7ee7c6a45ab8359ca756b",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "38ef73c9336f2a5b127746af72164a4d2a91da671960cda986fe5fdace4a343b": {
+    "27dca1a83aa6efb59fe4a833443e1700548c4faf9bbd433f18d99ac6abcc1aa2": {
       "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
-      "txHash": "0xa28ec4be9b9e51fbf972737542fc38d83582cd9b123d3107b9ba6a2d25510661",
+      "txHash": "0x73f439e7f456a9dbe7a615d482429cfa9abc13e81f3c5de4ffc5782cbfb7b04b",
       "layout": {
         "storage": [
           {
@@ -84,7 +84,7 @@
             "slot": "101",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:23"
+            "src": "contracts/Transfer.sol:19"
           },
           {
             "label": "levelsPerSum",
@@ -92,7 +92,7 @@
             "slot": "102",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:25"
+            "src": "contracts/Transfer.sol:21"
           },
           {
             "label": "commissionPercent",
@@ -100,7 +100,7 @@
             "slot": "103",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:26"
+            "src": "contracts/Transfer.sol:22"
           },
           {
             "label": "mainAddress",
@@ -108,7 +108,7 @@
             "slot": "104",
             "type": "t_address",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:27"
+            "src": "contracts/Transfer.sol:23"
           }
         ],
         "types": {
