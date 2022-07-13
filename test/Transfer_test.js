@@ -5,14 +5,7 @@ const main = require("../artifacts/contracts/interfaces/IMain.sol/IMain.json")
 const { constants } = require("@openzeppelin/test-helpers")
 
 describe("Transfer", function() {
-    let transfer
-    let mainMock
-    let invest_commission
-    let invest_sums
-    let invest_neg_sums
-    let user_levels
-    let contract_sum
-    
+
     let owner
     let root_user
     let partner_1
@@ -21,18 +14,24 @@ describe("Transfer", function() {
     let partner_2_1
     let partner_2_2
     let partner_2_3
-    
+
+    let transfer
+    let mainMock
+    let invest_commission
+    let invest_sums
+    let invest_neg_sums
+    let user_levels
+    let contract_sum
 
     before(async function() {
+        [owner, root_user, partner_1, partner_2, partner_3_empty, partner_2_1, partner_2_2, partner_2_3] =
+            await ethers.getSigners()
         invest_commission = 95
         invest_sums = ["0.01", "0.005", "6", "0.03", "0.02", "1"]
         invest_neg_sums = ["-0.01", "-0.005", "-6", "-0.03", "-0.02", "-1"]
         user_levels = [1, 0, 10, 0, 3, 2, 7]
         contract_sum = "7.065"
 
-        [owner, root_user, partner_1, partner_2, partner_3_empty,
-            partner_2_1, partner_2_2, partner_2_3] = await ethers.getSigners()
-        
         mainMock = await deployMockContract(owner, main.abi)
         
         await mainMock.mock.getDirectPartners.withArgs(root_user.address)
@@ -68,13 +67,11 @@ describe("Transfer", function() {
         await mainMock.mock.getInviter.withArgs(partner_2_3.address)
             .returns(partner_2_2.address)
 
-
         const Transfer = await ethers.getContractFactory("Transfer", owner)
         transfer = await upgrades.deployProxy(Transfer, [mainMock.address], {
             initializer: "initialize",
         })
         await transfer.deployed()
-        console.log("transfer deployed to ", transfer.address)
     })
 
     it("Correct deploy addresses", async function() {
@@ -91,32 +88,32 @@ describe("Transfer", function() {
     it("Should invest correct ether", async function() {
         await expect(
             await transfer.connect(root_user).investSum({value: ethers.utils.parseEther(invest_sums[0])})
-        ).to.changeEtherBalances(root_user, transfer,
+        ).to.changeEtherBalances([root_user, transfer],
             [ethers.utils.parseEther(invest_neg_sums[0]), ethers.utils.parseEther(invest_sums[0])])
 
         await expect(
             await transfer.connect(partner_1).investSum({value: ethers.utils.parseEther(invest_sums[1])})
-        ).to.changeEtherBalances(partner_1, transfer,
+        ).to.changeEtherBalances([partner_1, transfer],
             [ethers.utils.parseEther(invest_neg_sums[1]), ethers.utils.parseEther(invest_sums[1])])
 
         await expect(
             await transfer.connect(partner_2).investSum({value: ethers.utils.parseEther(invest_sums[2])})
-        ).to.changeEtherBalances(partner_2, transfer,
+        ).to.changeEtherBalances([partner_2, transfer],
             [ethers.utils.parseEther(invest_neg_sums[2]), ethers.utils.parseEther(invest_sums[2])])
 
         await expect(
             await transfer.connect(partner_2_1).investSum({value: ethers.utils.parseEther(invest_sums[3])})
-        ).to.changeEtherBalances(partner_2_1, transfer,
+        ).to.changeEtherBalances([partner_2_1, transfer],
             [ethers.utils.parseEther(invest_neg_sums[3]), ethers.utils.parseEther(invest_sums[3])])
 
         await expect(
             await transfer.connect(partner_2_2).investSum({value: ethers.utils.parseEther(invest_sums[4])})
-        ).to.changeEtherBalances(partner_2_2, transfer,
+        ).to.changeEtherBalances([partner_2_2, transfer],
             [ethers.utils.parseEther(invest_neg_sums[4]), ethers.utils.parseEther(invest_sums[4])])
 
         await expect(
             await transfer.connect(partner_2_3).investSum({value: ethers.utils.parseEther(invest_sums[5])})
-        ).to.changeEtherBalances(partner_2_3, transfer,
+        ).to.changeEtherBalances([partner_2_3, transfer],
             [ethers.utils.parseEther(invest_neg_sums[5]), ethers.utils.parseEther(invest_sums[5])])
     })
 
@@ -209,7 +206,7 @@ describe("Transfer", function() {
 
         await expect(len).to.equal(partners_mas.length)
 
-        for(let i = 0; i < len; i++) {
+        for(var i = 0; i < len; i++) {
             await expect(contract_array[i].partnerLevel).to.equal(partners_mas[i].partner_level)
             await expect(contract_array[i].partnerAddress).to.equal(partners_mas[i].partner_address)
         }
@@ -236,7 +233,7 @@ describe("Transfer", function() {
             .to.equal(ethers.utils.parseEther("0.0095"))
 
         await expect(
-            await transfer.connect(root_user).getContractSum())
+            await transfer.connect(owner).getContractSum())
             .to.equal(ethers.utils.parseEther(contract_sum).sub(ethers.utils.parseEther("0.95")))
     })
 
