@@ -28,8 +28,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     }
 
     /**
-    @dev initialize the contract (main address, array of lvls, array of commission percent) 
-    @param _mainAddress the address of the main contract
+    @dev initialize the contract (main address, array of lvls, array of commission percent)
     */
     function initialize() external initializer {
         __Ownable_init();
@@ -51,6 +50,9 @@ contract Transfer is Initializable, OwnableUpgradeable {
         commissionPercent = [10, 7, 5, 2, 1, 1, 1, 1, 1, 1];
     }
 
+    /**
+    @dev Check main address is empty
+    */
     modifier validMainAddress() {
         require(
             mainAddress != address(0),
