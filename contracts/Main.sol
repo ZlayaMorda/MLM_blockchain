@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.12;
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializabe.sol";
 
 /**
 Store inviter address for an user
@@ -11,7 +11,7 @@ Get their addresses
 */
 contract Main is Initializable{
     mapping (address => address) private inviter;
-    mapping (address => address[]) private directPartners;
+    mapping (address => address) private directPartners;
 
     /**
     @dev get user's inviter address

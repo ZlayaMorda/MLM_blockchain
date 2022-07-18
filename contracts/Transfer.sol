@@ -28,11 +28,9 @@ contract Transfer is Initializable, OwnableUpgradeable {
     }
 
     /**
-    @dev initialize the contract (main address, array of lvls, array of commission percent) 
-    @param _mainAddress the address of the main contract
+    @dev initialize the contract (main address, array of lvls, array of commission percent)
     */
-    function initialize(address _mainAddress) external initializer {
-        mainAddress = _mainAddress;
+    function initialize() external initializer {
         __Ownable_init();
 
         levelsPerSum = [
@@ -50,6 +48,26 @@ contract Transfer is Initializable, OwnableUpgradeable {
 
         // need to divide by 1000 to get percent
         commissionPercent = [10, 7, 5, 2, 1, 1, 1, 1, 1, 1];
+    }
+
+    /**
+    @dev Check main address is empty
+    */
+    modifier validMainAddress() {
+        require(
+            mainAddress != address(0),
+            "Transfer:: Address of Main contract not set"
+        );
+
+        _;
+    }
+
+    /**
+    @dev set main address
+    @param _mainAddress address of Main contract
+    */
+    function setMainAddress(address _mainAddress) external onlyOwner{
+        mainAddress = _mainAddress;
     }
 
     /**
@@ -91,11 +109,11 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @dev determine num  of direct partners and their lvls
     @return array of partner(address, level)
     */
-    function getPartners() external view returns(partner[] memory){
+    function getPartners() external view validMainAddress returns(partner[] memory){
         address[] memory partners = IMain(mainAddress).getDirectPartners(msg.sender);
         partner[] memory partnerLevels = new partner[](partners.length);
         for(uint256 i = 0; i < partners.length; i++){
-            partnerLevels[i] = partner(partners[i], _getLevel(partners[i]));    
+            partnerLevels[i] = partner(partners[i], _getLevel(partners[i]));
         }
         return (partnerLevels);
     }
@@ -123,15 +141,15 @@ contract Transfer is Initializable, OwnableUpgradeable {
             if(investment[_addressUser] < levelsPerSum[i]){
                 return i;
             }
-        }  
-        return 10;      
+        }
+        return 10;
     }
 
     /**
     @dev pay commision for all inviters
     @param _sum sum to withdraw
     */
-    function _payForPartners(uint256 _sum) private {
+    function _payForPartners(uint256 _sum) private validMainAddress {
         uint256 i = 1;
         address parent = IMain(mainAddress).getInviter(msg.sender);
         while(i < 11 && parent != address(0)) {

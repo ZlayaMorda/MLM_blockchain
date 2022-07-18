@@ -68,10 +68,11 @@ describe("Transfer", function() {
             .returns(partner_2_2.address)
 
         const Transfer = await ethers.getContractFactory("Transfer", owner)
-        transfer = await upgrades.deployProxy(Transfer, [mainMock.address], {
+        transfer = await upgrades.deployProxy(Transfer, {
             initializer: "initialize",
         })
         await transfer.deployed()
+        // await transfer.connect(owner).setMainAddress(mainMock.address)
     })
 
     it("Correct deploy addresses", async function() {
@@ -83,6 +84,16 @@ describe("Transfer", function() {
         const TransferV2 = await ethers.getContractFactory("Transfer")
         await upgrades.upgradeProxy(transfer.address, TransferV2)
         await expect(transfer.address).to.be.properAddress
+    })
+
+    it("Should revert setMainAddress", async function() {
+        await expect(transfer.connect(root_user).setMainAddress(mainMock.address))
+            .to.be.revertedWith("Ownable: caller is not the owner")
+    })
+
+    it("Should revert modifier validMainAddress", async function() {
+        // await transfer.connect(owner).setMainAddress(constants.ZERO_ADDRESS)
+        await expect(transfer.getPartners()).revertedWith("Transfer:: Address of Main contract not set")
     })
 
     it("Should invest correct ether", async function() {
@@ -195,6 +206,8 @@ describe("Transfer", function() {
                 this.partner_level = partner_level
             }
         }
+
+        await transfer.connect(owner).setMainAddress(mainMock.address)
 
         const contract_array = await transfer.connect(root_user).getPartners()
         const len = contract_array.length
