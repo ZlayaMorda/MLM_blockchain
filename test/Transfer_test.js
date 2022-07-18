@@ -232,15 +232,15 @@ describe("Transfer", function() {
 
         await expect(await transfer.connect(partner_2_2).getUserSum())
             .to.equal((ethers.utils.parseEther(invest_sums[4]).mul(invest_commission).div(100))
-                .add((ethers.utils.parseEther("0.95")).mul(7).div(1000)))
+                .add((ethers.utils.parseEther("0.95")).mul(1).div(100)))
 
         await expect(await transfer.connect(partner_2_1).getUserSum())
             .to.equal((ethers.utils.parseEther(invest_sums[3]).mul(invest_commission).div(100))
-                .add((ethers.utils.parseEther("0.95")).mul(5).div(1000)))
+                .add((ethers.utils.parseEther("0.95")).mul(7).div(1000)))
 
         await expect(await transfer.connect(partner_2).getUserSum())
             .to.equal((ethers.utils.parseEther(invest_sums[2]).mul(invest_commission).div(100))
-                .add((ethers.utils.parseEther("0.95")).mul(1).div(1000)))
+                .add((ethers.utils.parseEther("0.95")).mul(5).div(1000)))
 
         await expect(await transfer.connect(root_user).getUserSum())
             .to.equal(ethers.utils.parseEther("0.0095"))

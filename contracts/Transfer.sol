@@ -155,8 +155,9 @@ contract Transfer is Initializable, OwnableUpgradeable {
         while(i < 11 && parent != address(0)) {
             uint256 lvl = _getLevel(parent);
             if(lvl > i){
-                investment[parent] += _sum * commissionPercent[lvl - 1] / 1000;
+                investment[parent] += _sum * commissionPercent[i - 1] / 1000;
             }
+            i++;
             parent = IMain(mainAddress).getInviter(parent);
         }
     }
