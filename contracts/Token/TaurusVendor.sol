@@ -15,6 +15,10 @@ contract TaurusVendor is Ownable {
         taurusToken = TaurusToken(tokenAddress);
     }
 
+    /**
+    @dev Provides users to buy tokens from this contract
+    @return tokensAmount amount of purchased tokens 
+    */
     function buyTokens() external payable returns(uint256 tokensAmount) {
         require (
             msg.value >= 0.0001 ether,
@@ -34,4 +38,16 @@ contract TaurusVendor is Ownable {
         return amountToBuy;
     }
 
+    /**
+    @dev owner may to withdraw money from the contract
+    */
+    function withdraw() public onlyOwner {
+        require(
+            address(this).balance > 0,
+            "TaurusVendor:: Contract has not balance to withdraw"
+        );
+
+        (bool sent,) = msg.sender.call{value: address(this).balance}("");
+        require(sent, "TaurusVendor:: Failed to send user balance back to the owner");
+    }
 }
