@@ -1,8 +1,8 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-    "txHash": "0x3dd0488978f644e8d0e10036b62a6417180eed5aeae18de1bdb1c206af0375af"
+    "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+    "txHash": "0x6f760eacc2e293782cf5685c97fedb8e40c50882704158a59289096c8bf316f7"
   },
   "proxies": [
     {
@@ -32,7 +32,17 @@
     },
     {
       "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
-      "txHash": "0x8f0c2eb0da1e4ad0b18add5071ccd252cd57d244240c4aaaac690ea5e58a0aa6",
+      "txHash": "0x08115292c0aabde5003b9a0662cc4960ceb9980c81af614b482150b29bebafbe",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "txHash": "0xe5053bdf6d74d665118a720911940406f729a96a0ae7cfa0ebb5aaff6ad08e26",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+      "txHash": "0xf8d86155fe597ca135d1fdba9e740d74a73176bff03d6b3c57176810683ec5f2",
       "kind": "transparent"
     }
   ],
@@ -152,9 +162,124 @@
         }
       }
     },
-    "2704e059fd540df0d381da4099daf18e52e06a64a784b8ce92735975da1c70db": {
-      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-      "txHash": "0x75fdb36139810c5201371b96f2f3be76e4c528a34dfb2caf7671f87f173ec686",
+    "b4be761e0396d33bd3b61ba4d06e0df814cab262408d47c1d1dbef20a8d4ae56": {
+      "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+      "txHash": "0x6c8dac86a533955a91f97f33c20dfd91e17c99a3c694e23bef86565f1515329d",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "investment",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:19"
+          },
+          {
+            "label": "levelsPerSum",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:21"
+          },
+          {
+            "label": "commissionPercent",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:22"
+          },
+          {
+            "label": "mainAddress",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_address",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:23"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "681d763e349de2dfc1434e2b0ae41be70ec1cc9a0b6dff61ffe579f46015b192": {
+      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "txHash": "0xa56d20730fcd0cdbb1cccb2463f711676b725c6079814f3d2c9bf942830fbee9",
       "layout": {
         "storage": [
           {
