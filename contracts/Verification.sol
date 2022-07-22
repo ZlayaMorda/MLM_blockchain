@@ -27,11 +27,12 @@ contract Verification is EIP712, Ownable{
     function getHash(SignatureMessage calldata _message) private view returns(bytes32) {
         return _hashTypedDataV4(
             keccak256(abi.encode(
-            keccak256("Mail(address userWallet,uint256 salt,uint256 amount,string name,bytes32 signature)"),
+            keccak256("SignatureMessage(address userWallet,uint256 salt,uint256 amount,string name, bytes signature)"),
             _message.userWallet,
             _message.salt,
             _message.amount,
-            _message.name
+            _message.name,
+            keccak256(_message.signature)
         )));
     }
 
@@ -40,7 +41,7 @@ contract Verification is EIP712, Ownable{
         return ECDSA.recover(digest, _message.signature);
     }
 
-    function vefify(SignatureMessage calldata _message) external view returns(bool) {
+    function verify(SignatureMessage calldata _message) external view returns(bool) {
         return (signerAddress == getAddress(_message));
     }
 }
