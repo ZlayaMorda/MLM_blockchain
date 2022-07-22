@@ -4,6 +4,7 @@ pragma solidity ^0.8.12;
 
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 
 // using ECDSA for bytes32;
 
@@ -27,12 +28,11 @@ contract Verification is EIP712, Ownable{
     function getHash(SignatureMessage calldata _message) private view returns(bytes32) {
         return _hashTypedDataV4(
             keccak256(abi.encode(
-            keccak256("SignatureMessage(address userWallet,uint256 salt,uint256 amount,string name, bytes signature)"),
+            keccak256("SignatureMessage(address userWallet,uint256 salt,uint256 amount,string name)"),
             _message.userWallet,
             _message.salt,
             _message.amount,
-            _message.name,
-            keccak256(_message.signature)
+            keccak256(bytes(_message.name))
         )));
     }
 
@@ -42,6 +42,8 @@ contract Verification is EIP712, Ownable{
     }
 
     function verify(SignatureMessage calldata _message) external view returns(bool) {
+        console.log(getAddress(_message));
+        console.log(signerAddress);
         return (signerAddress == getAddress(_message));
     }
 }
