@@ -17,9 +17,8 @@ contract TaurusVendor is Ownable {
 
     /**
     @dev Provides users to buy tokens from this contract
-    @return tokensAmount amount of purchased tokens 
     */
-    function buyTokens() external payable returns(uint256 tokensAmount) {
+    function buyTokens() external payable {
         require (
             msg.value >= 0.0001 ether,
             "TaurusVendor:: You should send more ether"
@@ -34,8 +33,6 @@ contract TaurusVendor is Ownable {
 
         bool sent = taurusToken.transfer(msg.sender, amountToBuy);
         require(sent, "TaurusVendor:: Failed to transfer token to user");
-
-        return amountToBuy;
     }
 
     /**
