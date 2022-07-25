@@ -28,14 +28,23 @@ contract Verification is EIP712, Ownable{
     */
     function setSignerAddress(address _signer) external onlyOwner {
         signerAddress = _signer;
-    } 
+    }
+
+    /**
+    @dev verify if signer address is right
+    @param _message message struct
+    @return true if right address
+    */
+    function verify(SignatureMessage calldata _message) external view returns(bool) {
+        return (signerAddress == _getAddress(_message));
+    }
 
     /**
     @dev get hash of message struct
     @param _message message struct
     @return bytes32 hash
     */
-    function getHash(SignatureMessage calldata _message) private view returns(bytes32) {
+    function _getHash(SignatureMessage calldata _message) private view returns(bytes32) {
         return _hashTypedDataV4(
             keccak256(abi.encode(
             keccak256("SignatureMessage(address userWallet,uint256 salt,uint256 amount,string name)"),
@@ -51,19 +60,8 @@ contract Verification is EIP712, Ownable{
     @param _message message struct
     @return signer address
     */
-    function getAddress(SignatureMessage calldata _message) private view returns(address) {
-        bytes32 digest = getHash(_message);
+    function _getAddress(SignatureMessage calldata _message) private view returns(address) {
+        bytes32 digest = _getHash(_message);
         return ECDSA.recover(digest, _message.signature);
-    }
-
-    /**
-    @dev verify if signer address is right
-    @param _message message struct
-    @return true if right address
-    */
-    function verify(SignatureMessage calldata _message) external view returns(bool) {
-        console.log(getAddress(_message));
-        console.log(signerAddress);
-        return (signerAddress == getAddress(_message));
     }
 }

@@ -67,7 +67,7 @@ describe("Verification", function() {
 
     it("Uncorrect verification", async function() {
         const signature = await user._signTypedData(domain, types, value)
-        await expect(verification.connect(user).verify({
+        await expect(await verification.connect(user).verify({
             userWallet: user.address,
             salt: 1234,
             amount: 1,
