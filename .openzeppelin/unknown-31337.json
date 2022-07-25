@@ -329,7 +329,7 @@
             "slot": "101",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:23"
+            "src": "contracts/Transfer.sol:19"
           },
           {
             "label": "levelsPerSum",
@@ -337,7 +337,7 @@
             "slot": "102",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:25"
+            "src": "contracts/Transfer.sol:21"
           },
           {
             "label": "commissionPercent",
@@ -345,7 +345,7 @@
             "slot": "103",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:26"
+            "src": "contracts/Transfer.sol:22"
           },
           {
             "label": "mainAddress",
@@ -353,7 +353,7 @@
             "slot": "104",
             "type": "t_address",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:27"
+            "src": "contracts/Transfer.sol:23"
           }
         ],
         "types": {
