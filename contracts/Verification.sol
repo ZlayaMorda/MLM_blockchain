@@ -6,8 +6,9 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
-// using ECDSA for bytes32;
-
+/**
+Provides verification of the eip712 signing
+*/
 contract Verification is EIP712, Ownable{
     address signerAddress;
 
@@ -21,10 +22,19 @@ contract Verification is EIP712, Ownable{
 
     constructor() EIP712("TRS", "1") {}
 
+    /**
+    @dev owner may set signer address
+    @param _signer address of signer to set
+    */
     function setSignerAddress(address _signer) external onlyOwner {
         signerAddress = _signer;
     } 
 
+    /**
+    @dev get hash of message struct
+    @param _message message struct
+    @return bytes32 hash
+    */
     function getHash(SignatureMessage calldata _message) private view returns(bytes32) {
         return _hashTypedDataV4(
             keccak256(abi.encode(
@@ -36,11 +46,21 @@ contract Verification is EIP712, Ownable{
         )));
     }
 
+    /**
+    @dev get signer address from hash
+    @param _message message struct
+    @return signer address
+    */
     function getAddress(SignatureMessage calldata _message) private view returns(address) {
         bytes32 digest = getHash(_message);
         return ECDSA.recover(digest, _message.signature);
     }
 
+    /**
+    @dev verify if signer address is right
+    @param _message message struct
+    @return true if right address
+    */
     function verify(SignatureMessage calldata _message) external view returns(bool) {
         console.log(getAddress(_message));
         console.log(signerAddress);

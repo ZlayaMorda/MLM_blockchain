@@ -7,6 +7,10 @@ describe("Verification", function() {
     let signer
     let verification
 
+    let domain
+    let types
+    let value
+
     before(async function() {
         [owner, signer, user] = await ethers.getSigners()
 
@@ -27,14 +31,14 @@ describe("Verification", function() {
 
     it("Correct verification", async function() {
 
-        const domain = {
+        domain = {
             name: 'TRS',
             version: '1',
             chainId: 31337,
             verifyingContract: verification.address
         };
 
-        const types = {
+        types = {
             SignatureMessage: [
                 { name: 'userWallet', type: 'address'},
                 { name: 'salt', type: 'uint256'},
@@ -43,7 +47,7 @@ describe("Verification", function() {
             ]
         };
 
-        const value = {
+        value = {
             userWallet: user.address,
             salt: 1234,
             amount: 1,
@@ -52,7 +56,6 @@ describe("Verification", function() {
 
         const signature = await signer._signTypedData(domain, types, value)
 
-        console.log(signer.address)
         await expect(await verification.connect(user).verify({
             userWallet: user.address,
             salt: 1234,
@@ -60,6 +63,17 @@ describe("Verification", function() {
             name: "TRS",
             signature: signature
         })).to.be.true
+    })
+
+    it("Uncorrect verification", async function() {
+        const signature = await user._signTypedData(domain, types, value)
+        await expect(verification.connect(user).verify({
+            userWallet: user.address,
+            salt: 1234,
+            amount: 1,
+            name: "TRS",
+            signature: signature
+        })).to.be.false
     })
 
 })
