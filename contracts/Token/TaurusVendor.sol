@@ -7,12 +7,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract TaurusVendor is Ownable {
 
-    TaurusToken taurusToken;
+    address private tokenAddress;
 
-    uint256 private tokenPerEth = 10000;
+    uint256 private tokenPerEth = 1000000000000000000;
 
-    constructor(address tokenAddress) {
-        taurusToken = TaurusToken(tokenAddress);
+    constructor(address _tokenAddress) {
+        tokenAddress = _tokenAddress;
     }
 
     /**
@@ -27,11 +27,11 @@ contract TaurusVendor is Ownable {
         uint256 amountToBuy = msg.value * tokenPerEth / (10 ** 18);
 
         require(
-            taurusToken.balanceOf(address(this)) >= amountToBuy,
+            IERC20(tokenAddress).balanceOf(address(this)) >= amountToBuy,
             "TaurusVendor:: There aren't enough tokens on the balance"
         );
 
-        bool sent = taurusToken.transfer(msg.sender, amountToBuy);
+        bool sent = IERC20(tokenAddress).transfer(msg.sender, amountToBuy);
         require(sent, "TaurusVendor:: Failed to transfer token to user");
     }
 
@@ -47,4 +47,9 @@ contract TaurusVendor is Ownable {
         (bool sent,) = msg.sender.call{value: address(this).balance}("");
         require(sent, "TaurusVendor:: Failed to send user balance back to the owner");
     }
+    // function transferTokens(uint256 _value) external {
+    //     // taurusToken.increaseAllowance(address(this), _value);
+    //     require(IERC20(tokenAddress).approve(address(this), _value), "hdsjfkhsfdj");
+    //     IERC20(tokenAddress).transferFrom(address(msg.sender), address(this), _value);
+    // }
 }

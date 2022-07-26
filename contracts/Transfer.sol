@@ -5,6 +5,7 @@ pragma solidity ^0.8.12;
 import "./interfaces/IMain.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
 Store user's investment sum
@@ -21,6 +22,8 @@ contract Transfer is Initializable, OwnableUpgradeable {
     uint256[] private levelsPerSum;
     uint256[] private  commissionPercent;
     address private mainAddress;
+    address private tokenAddress;
+    
 
     struct partner {
         address partnerAddress;
@@ -66,27 +69,45 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @dev set main address
     @param _mainAddress address of Main contract
     */
-    function setMainAddress(address _mainAddress) external onlyOwner{
+    function setMainAddress(address _mainAddress) external onlyOwner {
         mainAddress = _mainAddress;
     }
 
     /**
-    @dev invest more then 20 weis, contract get 5%
+    @dev set token address
+    @param _tokenAddress address of the token
     */
-    function investSum() external payable {
-        require(
-            msg.value > 20,
-            "Transfer:: Too much little sum"
-        );
-        investment[msg.sender] += 95 * msg.value / 100;
+    function setTokenAddress(address _tokenAddress) external onlyOwner {
+        tokenAddress = _tokenAddress;
     }
 
     /**
-    @dev get contract balance
-    @return contract balance
+    @dev invest more then 20 TRS, contract get 5%
+    @param _tokenSum sum of invest in token
+    */
+    function investSum(uint256 _tokenSum) external payable {
+        require(
+            _tokenSum > 20,
+            "Transfer:: Too much little sum"
+        );
+
+        require(
+            IERC20(tokenAddress).approve(address(this), _tokenSum),
+             "Transfer:: not approved invest"
+        );
+
+        bool sent = IERC20(tokenAddress).transferFrom(address(msg.sender), address(this), _tokenSum);
+        require(sent, "TaurusVendor:: Failed to invest tokens to MLM");
+
+        investment[msg.sender] += 95 * _tokenSum / 100;
+    }
+
+    /**
+    @dev get contract balance in TRS
+    @return contract balance in TRS
     */
     function getContractSum() external view onlyOwner returns (uint256) {
-        return address(this).balance;
+        return IERC20(tokenAddress).balanceOf(address(this));
     }
 
     /**
@@ -163,13 +184,14 @@ contract Transfer is Initializable, OwnableUpgradeable {
     }
 
     /**
-    @dev withdraw money to user
+    @dev withdraw TRS to user
     @param _sum sum to withdraw
-    @param _adr user's address
+    @param _address user's address
     */
-    function _payFromContract(uint256 _sum, address _adr) private {
-        (bool sent, /*memory data*/) = _adr.call{value: _sum}("");
-        require(sent,"Transfer:: Fail, ether has not sent");
-        investment[_adr] -= _sum;
+    function _payFromContract(uint256 _sum, address _address) private {
+        bool sent = IERC20(tokenAddress).transfer(_address, _sum);
+        require(sent, "TaurusVendor:: Failed to transfer token to user");
+
+        investment[_address] -= _sum;
     }
 }
