@@ -7,12 +7,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract TaurusVendor is Ownable {
 
-    TaurusToken taurusToken;
+    address private tokenAddress;
 
-    uint256 private tokenPerEth = 10000;
+    uint256 private tokenPerEth = 1000000000000000000;
 
-    constructor(address tokenAddress) {
-        taurusToken = TaurusToken(tokenAddress);
+    function setTokenAddress(address _tokenAddress) external onlyOwner {
+        tokenAddress = _tokenAddress;
     }
 
     /**
@@ -27,18 +27,18 @@ contract TaurusVendor is Ownable {
         uint256 amountToBuy = msg.value * tokenPerEth / (10 ** 18);
 
         require(
-            taurusToken.balanceOf(address(this)) >= amountToBuy,
+            IERC20(tokenAddress).balanceOf(address(this)) >= amountToBuy,
             "TaurusVendor:: There aren't enough tokens on the balance"
         );
 
-        bool sent = taurusToken.transfer(msg.sender, amountToBuy);
+        bool sent = IERC20(tokenAddress).transfer(msg.sender, amountToBuy);
         require(sent, "TaurusVendor:: Failed to transfer token to user");
     }
 
     /**
     @dev owner may to withdraw money from the contract
     */
-    function withdraw() public onlyOwner {
+    function withdraw() external onlyOwner {
         require(
             address(this).balance > 0,
             "TaurusVendor:: Contract has not balance to withdraw"

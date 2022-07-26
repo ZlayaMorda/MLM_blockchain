@@ -2,6 +2,7 @@ const { expect } = require("chai")
 const { ethers, upgrades } = require("hardhat")
 const {deployMockContract} = require("ethereum-waffle")
 const main = require("../artifacts/contracts/interfaces/IMain.sol/IMain.json")
+const token = require("../artifacts/contracts/Token/TaurusTokenERC20.sol/TaurusToken.json")
 const { constants } = require("@openzeppelin/test-helpers")
 
 describe("Transfer", function() {
@@ -22,6 +23,8 @@ describe("Transfer", function() {
     let invest_neg_sums
     let user_levels
     let contract_sum
+
+    let tokenMock
 
     before(async function() {
         [owner, root_user, partner_1, partner_2, partner_3_empty, partner_2_1, partner_2_2, partner_2_3] =
@@ -72,12 +75,66 @@ describe("Transfer", function() {
             initializer: "initialize",
         })
         await transfer.deployed()
-        // await transfer.connect(owner).setMainAddress(mainMock.address)
+
+        tokenMock = await deployMockContract(owner, token.abi)
+
+        await tokenMock.mock.approve
+            .withArgs(transfer.address, ethers.utils.parseEther(invest_sums[0]))
+            .returns(true)
+        await tokenMock.mock.transferFrom
+            .withArgs(root_user.address, transfer.address, ethers.utils.parseEther(invest_sums[0]))
+            .returns(true)
+
+        await tokenMock.mock.approve
+            .withArgs(transfer.address, ethers.utils.parseEther(invest_sums[1]))
+            .returns(true)
+        await tokenMock.mock.transferFrom
+            .withArgs(partner_1.address, transfer.address, ethers.utils.parseEther(invest_sums[1]))
+            .returns(true)
+
+        await tokenMock.mock.approve
+            .withArgs(transfer.address, ethers.utils.parseEther(invest_sums[2]))
+            .returns(true)
+        await tokenMock.mock.transferFrom
+            .withArgs(partner_2.address, transfer.address, ethers.utils.parseEther(invest_sums[2]))
+            .returns(true)
+
+        await tokenMock.mock.approve
+            .withArgs(transfer.address, ethers.utils.parseEther(invest_sums[3]))
+            .returns(true)
+        await tokenMock.mock.transferFrom
+            .withArgs(partner_2_1.address, transfer.address, ethers.utils.parseEther(invest_sums[3]))
+            .returns(true)
+
+        await tokenMock.mock.approve
+            .withArgs(transfer.address, ethers.utils.parseEther(invest_sums[4]))
+            .returns(true)
+        await tokenMock.mock.transferFrom
+            .withArgs(partner_2_2.address, transfer.address, ethers.utils.parseEther(invest_sums[4]))
+            .returns(true)
+
+        await tokenMock.mock.approve
+            .withArgs(transfer.address, ethers.utils.parseEther(invest_sums[5]))
+            .returns(true)
+        await tokenMock.mock.transferFrom
+            .withArgs(partner_2_3.address, transfer.address, ethers.utils.parseEther(invest_sums[5]))
+            .returns(true)
+
+        await tokenMock.mock.transfer
+            .withArgs(partner_2_3.address, ethers.utils.parseEther("0.95"))
+            .returns(true)
     })
 
     it("Correct deploy addresses", async function() {
         expect(mainMock.address).to.be.properAddress
+        expect(tokenMock.address).to.be.properAddress
         expect(transfer.address).to.be.properAddress
+    })
+
+    it("Correct set and revert token address", async function() {
+        await transfer.connect(owner).setTokenAddress(tokenMock.address)
+        await expect(transfer.connect(root_user).setTokenAddress(mainMock.address))
+            .to.be.revertedWith("Ownable: caller is not the owner")
     })
 
     it("Correct upgrade transfer", async function() {
@@ -92,49 +149,53 @@ describe("Transfer", function() {
     })
 
     it("Should revert modifier validMainAddress", async function() {
-        // await transfer.connect(owner).setMainAddress(constants.ZERO_ADDRESS)
         await expect(transfer.getPartners()).revertedWith("Transfer:: Address of Main contract not set")
-    })
-
-    it("Should invest correct ether", async function() {
-        await expect(
-            await transfer.connect(root_user).investSum({value: ethers.utils.parseEther(invest_sums[0])})
-        ).to.changeEtherBalances([root_user, transfer],
-            [ethers.utils.parseEther(invest_neg_sums[0]), ethers.utils.parseEther(invest_sums[0])])
-
-        await expect(
-            await transfer.connect(partner_1).investSum({value: ethers.utils.parseEther(invest_sums[1])})
-        ).to.changeEtherBalances([partner_1, transfer],
-            [ethers.utils.parseEther(invest_neg_sums[1]), ethers.utils.parseEther(invest_sums[1])])
-
-        await expect(
-            await transfer.connect(partner_2).investSum({value: ethers.utils.parseEther(invest_sums[2])})
-        ).to.changeEtherBalances([partner_2, transfer],
-            [ethers.utils.parseEther(invest_neg_sums[2]), ethers.utils.parseEther(invest_sums[2])])
-
-        await expect(
-            await transfer.connect(partner_2_1).investSum({value: ethers.utils.parseEther(invest_sums[3])})
-        ).to.changeEtherBalances([partner_2_1, transfer],
-            [ethers.utils.parseEther(invest_neg_sums[3]), ethers.utils.parseEther(invest_sums[3])])
-
-        await expect(
-            await transfer.connect(partner_2_2).investSum({value: ethers.utils.parseEther(invest_sums[4])})
-        ).to.changeEtherBalances([partner_2_2, transfer],
-            [ethers.utils.parseEther(invest_neg_sums[4]), ethers.utils.parseEther(invest_sums[4])])
-
-        await expect(
-            await transfer.connect(partner_2_3).investSum({value: ethers.utils.parseEther(invest_sums[5])})
-        ).to.changeEtherBalances([partner_2_3, transfer],
-            [ethers.utils.parseEther(invest_neg_sums[5]), ethers.utils.parseEther(invest_sums[5])])
     })
 
     it("Should revert if invest less then 20 wei", async function() {
         await expect(
-            transfer.connect(root_user).investSum({value: 19})
+            transfer.connect(root_user).investSum(19)
         ).to.be.revertedWith("Transfer:: Too much little sum")
     })
 
+    it("Should correct invest and get user sum", async function() {
+        await transfer.connect(root_user).investSum(ethers.utils.parseEther(invest_sums[0]))
+        await expect(
+            await transfer.connect(root_user).getUserSum()).to.equal
+        (ethers.utils.parseEther(invest_sums[0]).mul(invest_commission).div(100))
+
+        await transfer.connect(partner_1).investSum(ethers.utils.parseEther(invest_sums[1]))
+        await expect(
+            await transfer.connect(partner_1).getUserSum()).to.equal
+        (ethers.utils.parseEther(invest_sums[1]).mul(invest_commission).div(100))
+
+        await transfer.connect(partner_2).investSum(ethers.utils.parseEther(invest_sums[2]))
+        await expect(
+            await transfer.connect(partner_2).getUserSum()).to.equal
+        (ethers.utils.parseEther(invest_sums[2]).mul(invest_commission).div(100))
+
+        await transfer.connect(partner_2_1).investSum(ethers.utils.parseEther(invest_sums[3]))
+        await expect(
+            await transfer.connect(partner_2_1).getUserSum()).to.equal
+        (ethers.utils.parseEther(invest_sums[3]).mul(invest_commission).div(100))
+
+        await transfer.connect(partner_2_2).investSum(ethers.utils.parseEther(invest_sums[4]))
+        await expect(
+            await transfer.connect(partner_2_2).getUserSum()).to.equal
+        (ethers.utils.parseEther(invest_sums[4]).mul(invest_commission).div(100))
+
+        await transfer.connect(partner_2_3).investSum(ethers.utils.parseEther(invest_sums[5]))
+        await expect(
+            await transfer.connect(partner_2_3).getUserSum()).to.equal
+        (ethers.utils.parseEther(invest_sums[5]).mul(invest_commission).div(100))
+
+        await expect(
+            await transfer.connect(partner_3_empty).getUserSum()).to.equal(0)
+    })
+
     it("Should get contract sum", async function() {
+        await tokenMock.mock.balanceOf.withArgs(transfer.address)
+            .returns(ethers.utils.parseEther("7.065"))
         await expect(
             await transfer.connect(owner).getContractSum()).to.equal(ethers.utils.parseEther(contract_sum))
     })
@@ -145,34 +206,6 @@ describe("Transfer", function() {
         ).to.revertedWith("Ownable: caller is not the owner")
     })
 
-    it("Should get user sum", async function() {
-        await expect(
-            await transfer.connect(root_user).getUserSum()).to.equal
-        (ethers.utils.parseEther(invest_sums[0]).mul(invest_commission).div(100))
-
-        await expect(
-            await transfer.connect(partner_1).getUserSum()).to.equal
-        (ethers.utils.parseEther(invest_sums[1]).mul(invest_commission).div(100))
-
-        await expect(
-            await transfer.connect(partner_2).getUserSum()).to.equal
-        (ethers.utils.parseEther(invest_sums[2]).mul(invest_commission).div(100))
-
-        await expect(
-            await transfer.connect(partner_2_1).getUserSum()).to.equal
-        (ethers.utils.parseEther(invest_sums[3]).mul(invest_commission).div(100))
-
-        await expect(
-            await transfer.connect(partner_2_2).getUserSum()).to.equal
-        (ethers.utils.parseEther(invest_sums[4]).mul(invest_commission).div(100))
-
-        await expect(
-            await transfer.connect(partner_2_3).getUserSum()).to.equal
-        (ethers.utils.parseEther(invest_sums[5]).mul(invest_commission).div(100))
-
-        await expect(
-            await transfer.connect(partner_3_empty).getUserSum()).to.equal(0)
-    })
 
     it("Should get user level", async function() {
         await expect(
@@ -226,9 +259,8 @@ describe("Transfer", function() {
     })
 
     it("Should correctly withdraw money and pay commissions", async function() {
-        await expect(await transfer.connect(partner_2_3).withdrawMoney(ethers.utils.parseEther("0.95"))
-        ).to.changeEtherBalances([partner_2_3, transfer],
-                    [ethers.utils.parseEther("0.95"), ethers.utils.parseEther("-0.95")])
+        await transfer.connect(partner_2_3).withdrawMoney(ethers.utils.parseEther("0.95"))
+        await expect(await transfer.connect(partner_2_3).getUserSum()).to.be.equal(0)
 
         await expect(await transfer.connect(partner_2_2).getUserSum())
             .to.equal((ethers.utils.parseEther(invest_sums[4]).mul(invest_commission).div(100))
@@ -244,15 +276,11 @@ describe("Transfer", function() {
 
         await expect(await transfer.connect(root_user).getUserSum())
             .to.equal(ethers.utils.parseEther("0.0095"))
-
-        await expect(
-            await transfer.connect(owner).getContractSum())
-            .to.equal(ethers.utils.parseEther(contract_sum).sub(ethers.utils.parseEther("0.95")))
     })
 
     it("Should revert withdraw money", async function() {
         await expect(
-            transfer.connect(partner_2_3).withdrawMoney(ethers.utils.parseEther("0.01"))
+            transfer.connect(partner_2_3).withdrawMoney(ethers.utils.parseEther("0.95"))
         ).to.be.revertedWith("Transfer:: The sum is over then investment")
     })
 })
