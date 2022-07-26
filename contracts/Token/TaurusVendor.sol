@@ -11,7 +11,7 @@ contract TaurusVendor is Ownable {
 
     uint256 private tokenPerEth = 1000000000000000000;
 
-    constructor(address _tokenAddress) {
+    function setTokenAddress(address _tokenAddress) external onlyOwner {
         tokenAddress = _tokenAddress;
     }
 

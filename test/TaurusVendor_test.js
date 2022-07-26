@@ -16,7 +16,7 @@ describe("TaurusVendor", function() {
         taurusMock = await deployMockContract(owner, taurus.abi)
 
         const TaurusVendor = await ethers.getContractFactory("TaurusVendor", owner)
-        taurusVendor = await TaurusVendor.deploy(taurusMock.address)
+        taurusVendor = await TaurusVendor.deploy()
 
         await taurusMock.mock.transfer.withArgs(taurusVendor.address, ethers.utils.parseEther("1"))
             .returns(true)
@@ -26,6 +26,12 @@ describe("TaurusVendor", function() {
 
         await taurusMock.mock.balanceOf.withArgs(taurusVendor.address)
             .returns(ethers.utils.parseEther("1"))
+    })
+
+    it("Correct revert set token address", async function() {
+        await taurusVendor.connect(owner).setTokenAddress(taurusMock.address)
+        await expect(taurusVendor.connect(user).setTokenAddress(owner.address))
+            .to.be.revertedWith("Ownable: caller is not the owner")
     })
 
     it("Correct deploy addresses", async function() {
@@ -54,9 +60,14 @@ describe("TaurusVendor", function() {
             [ethers.utils.parseEther("1"), ethers.utils.parseEther("-1")])
     })
 
-    it("Correct buy all tokens", async function() {
+    it("Correct withdraw all ether", async function() {
         await expect(await taurusVendor.connect(owner).withdraw())
             .to.changeEtherBalances([owner, taurusVendor],
             [ethers.utils.parseEther("1"), ethers.utils.parseEther("-1")])
+    })
+
+    it("Correct revert withdraw ether", async function() {
+        await expect(taurusVendor.connect(user).withdraw())
+            .to.be.revertedWith("Ownable: caller is not the owner")
     })
 })
