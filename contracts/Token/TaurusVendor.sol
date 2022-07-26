@@ -38,7 +38,7 @@ contract TaurusVendor is Ownable {
     /**
     @dev owner may to withdraw money from the contract
     */
-    function withdraw() public onlyOwner {
+    function withdraw() external onlyOwner {
         require(
             address(this).balance > 0,
             "TaurusVendor:: Contract has not balance to withdraw"
