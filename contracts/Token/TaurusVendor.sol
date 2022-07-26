@@ -47,9 +47,4 @@ contract TaurusVendor is Ownable {
         (bool sent,) = msg.sender.call{value: address(this).balance}("");
         require(sent, "TaurusVendor:: Failed to send user balance back to the owner");
     }
-    // function transferTokens(uint256 _value) external {
-    //     // taurusToken.increaseAllowance(address(this), _value);
-    //     require(IERC20(tokenAddress).approve(address(this), _value), "hdsjfkhsfdj");
-    //     IERC20(tokenAddress).transferFrom(address(msg.sender), address(this), _value);
-    // }
 }

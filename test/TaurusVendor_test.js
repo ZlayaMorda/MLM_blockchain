@@ -18,14 +18,14 @@ describe("TaurusVendor", function() {
         const TaurusVendor = await ethers.getContractFactory("TaurusVendor", owner)
         taurusVendor = await TaurusVendor.deploy(taurusMock.address)
 
-        await taurusMock.mock.transfer.withArgs(taurusVendor.address, 10000)
+        await taurusMock.mock.transfer.withArgs(taurusVendor.address, ethers.utils.parseEther("1"))
             .returns(true)
 
-        await taurusMock.mock.transfer.withArgs(user.address, 10000)
+        await taurusMock.mock.transfer.withArgs(user.address, ethers.utils.parseEther("1"))
             .returns(true)
 
         await taurusMock.mock.balanceOf.withArgs(taurusVendor.address)
-            .returns(10000)
+            .returns(ethers.utils.parseEther("1"))
     })
 
     it("Correct deploy addresses", async function() {

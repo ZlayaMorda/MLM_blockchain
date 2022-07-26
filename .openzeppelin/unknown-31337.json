@@ -26,18 +26,18 @@
       "kind": "transparent"
     },
     {
-      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "txHash": "0x94dcac84ab6a6b0dafbadcbdfdc17c1cfc0001d705ff6c7321554f45dddc8bd1",
+      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "txHash": "0xe5053bdf6d74d665118a720911940406f729a96a0ae7cfa0ebb5aaff6ad08e26",
       "kind": "transparent"
     },
     {
       "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
-      "txHash": "0x08115292c0aabde5003b9a0662cc4960ceb9980c81af614b482150b29bebafbe",
+      "txHash": "0x57ce3672a858dd1affd9e95cd86e22ac0ef5f4c5e4fc46d765a21feb092317b8",
       "kind": "transparent"
     },
     {
-      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
-      "txHash": "0xe5053bdf6d74d665118a720911940406f729a96a0ae7cfa0ebb5aaff6ad08e26",
+      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "txHash": "0xf985bb99b717b1cb04f6b1a33b0355df7a3050784b1429518aa1ba1960b591ef",
       "kind": "transparent"
     },
     {
@@ -47,121 +47,6 @@
     }
   ],
   "impls": {
-    "817069b4670adc52024debf8489c6d59a841273920b931bccf8678d52c629481": {
-      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
-      "txHash": "0xcf884691f286510d3c025fc6b053240093abd70bf8c34bf92f90083f4ef51eee",
-      "layout": {
-        "storage": [
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "0",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "1",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
-          },
-          {
-            "label": "_owner",
-            "offset": 0,
-            "slot": "51",
-            "type": "t_address",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "52",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
-          },
-          {
-            "label": "investment",
-            "offset": 0,
-            "slot": "101",
-            "type": "t_mapping(t_address,t_uint256)",
-            "contract": "Transfer",
-            "src": "contracts/Transfer.sol:23"
-          },
-          {
-            "label": "levelsPerSum",
-            "offset": 0,
-            "slot": "102",
-            "type": "t_array(t_uint256)dyn_storage",
-            "contract": "Transfer",
-            "src": "contracts/Transfer.sol:25"
-          },
-          {
-            "label": "commissionPercent",
-            "offset": 0,
-            "slot": "103",
-            "type": "t_array(t_uint256)dyn_storage",
-            "contract": "Transfer",
-            "src": "contracts/Transfer.sol:26"
-          },
-          {
-            "label": "mainAddress",
-            "offset": 0,
-            "slot": "104",
-            "type": "t_address",
-            "contract": "Transfer",
-            "src": "contracts/Transfer.sol:27"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]",
-            "numberOfBytes": "1568"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_array(t_uint256)dyn_storage": {
-            "label": "uint256[]",
-            "numberOfBytes": "32"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_mapping(t_address,t_uint256)": {
-            "label": "mapping(address => uint256)",
-            "numberOfBytes": "32"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        }
-      }
-    },
     "b4be761e0396d33bd3b61ba4d06e0df814cab262408d47c1d1dbef20a8d4ae56": {
       "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
       "txHash": "0x6c8dac86a533955a91f97f33c20dfd91e17c99a3c694e23bef86565f1515329d",
@@ -277,9 +162,9 @@
         }
       }
     },
-    "681d763e349de2dfc1434e2b0ae41be70ec1cc9a0b6dff61ffe579f46015b192": {
-      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
-      "txHash": "0xa56d20730fcd0cdbb1cccb2463f711676b725c6079814f3d2c9bf942830fbee9",
+    "99782d9a962f89a729e403d50e0c6823a99e06b6a724f66e20e06c23cbd32a11": {
+      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      "txHash": "0x28754530a689190654ac08e8ecfef59a01f141add0b026af697ec11e581f06cb",
       "layout": {
         "storage": [
           {
@@ -329,7 +214,7 @@
             "slot": "101",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:19"
+            "src": "contracts/Transfer.sol:20"
           },
           {
             "label": "levelsPerSum",
@@ -337,7 +222,7 @@
             "slot": "102",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:21"
+            "src": "contracts/Transfer.sol:22"
           },
           {
             "label": "commissionPercent",
@@ -345,7 +230,7 @@
             "slot": "103",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:22"
+            "src": "contracts/Transfer.sol:23"
           },
           {
             "label": "mainAddress",
@@ -353,7 +238,138 @@
             "slot": "104",
             "type": "t_address",
             "contract": "Transfer",
-            "src": "contracts/Transfer.sol:23"
+            "src": "contracts/Transfer.sol:24"
+          },
+          {
+            "label": "tokenAddress",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_address",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:25"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "1a38e17d840a64d642186a81a0ae161af6bac0f3bd06ab3384f5ac24cf172b25": {
+      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "txHash": "0x977272b28340d6e898c6528a7ae71d237e7dd1e6ee85c9ee329a9187a7da7fe9",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "investment",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:24"
+          },
+          {
+            "label": "levelsPerSum",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:26"
+          },
+          {
+            "label": "commissionPercent",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:27"
+          },
+          {
+            "label": "mainAddress",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_address",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:28"
+          },
+          {
+            "label": "tokenAddress",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_address",
+            "contract": "Transfer",
+            "src": "contracts/Transfer.sol:29"
           }
         ],
         "types": {

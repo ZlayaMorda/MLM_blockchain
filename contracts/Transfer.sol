@@ -85,7 +85,7 @@ contract Transfer is Initializable, OwnableUpgradeable {
     @dev invest more then 20 TRS, contract get 5%
     @param _tokenSum sum of invest in token
     */
-    function investSum(uint256 _tokenSum) external payable {
+    function investSum(uint256 _tokenSum) external {
         require(
             _tokenSum > 20,
             "Transfer:: Too much little sum"
